@@ -1,19 +1,21 @@
 import numpy as np
 import random
 import matplotlib.pyplot as plt
-import pdb
-# from text_recog import *
 
 
 class Particle:
     """A single particle in the swarm"""
 
-    def __init__(self, dimension, X_max=-5, X_min=5):
-        self.position = ((X_max - X_min) *
-                         np.random.rand(dimension[0], dimension[1], dimension[2], dimension[3]) + X_min)
-                         # np.random.rand(dimension[0], dimension[1]) + X_min)
-        self.velocity = (0.1 * (X_max - X_min) * np.random.rand(
-            dimension[0], dimension[1])) + 0.1 * X_min
+    def __init__(self, dimension, X_max=5, X_min=-5):
+        self.position = []
+        self.velocity = []
+        for d in dimension:
+            self.position.append(((X_max - X_min) *
+                np.random.rand(d) + X_min))
+            self.velocity.append((0.1 * (X_max - X_min) * np.random.rand(d) +
+                                 0.1 * X_min))
+        self.position = np.array(self.position)
+        self.velocity = np.array(self.velocity)
         self.pbest = self.position
 
     def update_pbest(self, error_function):
@@ -48,13 +50,11 @@ class Swarm(Particle):
     def update_step(self):
         for i in range(self.numParticles):
             self.r1, self.r2 = np.random.rand(2)
-            pdb.set_trace()
             self.swarm[i].velocity = (self.w * self.swarm[i].velocity +
                                 self.c1 * self.r1 * (self.swarm[i].pbest - self.swarm[i].position) +
                                 self.c2 * self.r2 * (self.gbest - self.swarm[i].position))
             self.swarm[i].position = (self.swarm[i].position +
                                       self.swarm[i].velocity)
-            pdb.set_trace()
             self.swarm[i].update_pbest(self.error_function)
             
             rnd = random.random()
@@ -62,7 +62,7 @@ class Swarm(Particle):
                 self.swarm[i].__init__(self.dimension)
         self.update_gbest()
 
-    def optimise(self, iterations=500):
+    def optimise(self, iterations=100):
         it = 0
         J = []
         while self.error_function(self.gbest) > self.exit_error:
@@ -72,9 +72,10 @@ class Swarm(Particle):
 #                plt.show()
             self.update_step()
             it += 1
-            print(it)
+            print("iteration: ",it, "cost: ", J[-1])
             if it > iterations: break
         plt.plot(J); plt.show()
+        return J
     
     def display_positions(self):
         x_pos = [self.swarm[i].position[0] for i in range(self.numParticles)]

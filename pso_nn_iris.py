@@ -117,9 +117,9 @@ def load_data(path):
 
 
 if __name__ == '__main__':
-    X_train, y_train = load_data("./data/traindata.mat.tar.gz")
-    nn = NN_hwr([784, 15, 10], 10)
-    costs = nn.train_nn_pso(X_train[:500], y_train[:500], 3, 75, n_iterations=20)
+    X_train, y_train = load_data("./data/iris_2.mat")
+    nn = NN_hwr([4, 3, 3], 100)
+    costs = nn.train_nn_pso(X_train, y_train, 3, 75, n_iterations=20)
 
     accuracy = 0
     for i in range(100):
