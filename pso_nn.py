@@ -118,8 +118,8 @@ def load_data(path):
 
 if __name__ == '__main__':
     X_train, y_train = load_data("./data/traindata.mat.tar.gz")
-    nn = NN_hwr([784, 15, 10], 10)
-    costs = nn.train_nn_pso(X_train[:500], y_train[:500], 3, 75, n_iterations=20)
+    nn = NN_hwr([784, 15, 10], 100)
+    costs = nn.train_nn_pso(X_train[:500], y_train[:500], 1, 500, n_iterations=10)
 
     accuracy = 0
     for i in range(100):
